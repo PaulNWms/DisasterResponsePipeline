@@ -1,4 +1,13 @@
+import nltk
+import re
+from nltk import pos_tag, ne_chunk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.stem.porter import PorterStemmer
 from sklearn.base import BaseEstimator, TransformerMixin
+
+nltk.download(['punkt', 'wordnet', 'stopwords', 'averaged_perceptron_tagger', 'maxent_ne_chunker', 'words'])
 
 def tokenize(text):
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -25,6 +34,9 @@ def tokenize(text):
         
     stemmed_tokens = [PorterStemmer().stem(w) for w in clean_tokens]
     return stemmed_tokens
+
+def tokenize2(text):
+    return tokenize
 
 class TokenCountExtractor(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):

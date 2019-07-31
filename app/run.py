@@ -11,9 +11,11 @@ from plotly.graph_objs import Bar
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 from sklearn.base import BaseEstimator, TransformerMixin
-from past.builtins import execfile
 
-execfile('../models/transformers.py')
+import sys
+sys.path.append('../models')
+from my_transformers import tokenize, TokenCountExtractor, UpperCaseExtractor, EntityCountExtractor
+
 
 app = Flask(__name__)
 

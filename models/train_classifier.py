@@ -19,10 +19,8 @@ from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
-from past.builtins import execfile
 
-
-execfile('models/transformers.py')
+import my_transformers
 
 nltk.download(['punkt', 'wordnet', 'stopwords', 'averaged_perceptron_tagger', 'maxent_ne_chunker', 'words'])
 
