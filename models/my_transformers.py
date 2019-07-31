@@ -35,9 +35,6 @@ def tokenize(text):
     stemmed_tokens = [PorterStemmer().stem(w) for w in clean_tokens]
     return stemmed_tokens
 
-def tokenize2(text):
-    return tokenize
-
 class TokenCountExtractor(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
