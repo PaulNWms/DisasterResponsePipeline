@@ -20,7 +20,9 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
 
-import my_transformers
+import sys
+sys.path.append('../models')
+from my_transformers import tokenize, TokenCountExtractor, UpperCaseExtractor, EntityCountExtractor
 
 nltk.download(['punkt', 'wordnet', 'stopwords', 'averaged_perceptron_tagger', 'maxent_ne_chunker', 'words'])
 
@@ -31,7 +33,7 @@ def load_data(database_filepath):
         :returns: X and Y tables, and a list of category names
         :rtype: tuple of (DataFrame, DataFrame, list)
     """
-    engine = create_engine('sqlite:///pauls_messages.db')
+    engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('messages', engine)
     # X is a dataframe with 1 column - the messages
     X = df.message

@@ -12,12 +12,12 @@ def load_data(messages_filepath, categories_filepath):
         :returns: a joined table containing messages and categories
         :rtype: DataFrame
     """
-    messages_tbl = pd.read_csv(messages_filepath)
-    categories_tbl = pd.read_csv(categories_filepath)
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
     # Merge datasets
-    df = pd.merge(messages_tbl, categories_tbl, how='inner', on='id')
+    df = pd.merge(messages, categories, how='inner', on='id')
     # Split `categories` into separate category columns
-    categories = df.categories_tbl.str.split(';', expand=True)
+    categories = df.categories.str.split(';', expand=True)
     row = categories.iloc[0]
     category_colnames = (row.str.split('-').str)[0].tolist()
     categories.columns = category_colnames
