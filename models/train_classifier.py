@@ -25,14 +25,27 @@ import my_transformers
 nltk.download(['punkt', 'wordnet', 'stopwords', 'averaged_perceptron_tagger', 'maxent_ne_chunker', 'words'])
 
 def load_data(database_filepath):
+    """Loads data from a database file into X and Y matrices.
+        :param database_filepath: the database file to load
+        :type database_filepath: str
+        :returns: X and Y tables, and a list of category names
+        :rtype: tuple of (DataFrame, DataFrame, list)
+    """
     engine = create_engine('sqlite:///pauls_messages.db')
     df = pd.read_sql_table('messages', engine)
+    # X is a dataframe with 1 column - the messages
     X = df.message
+    # Y is all the categories, after a little cleaning
     Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)
+    # categories are derived from the column names
     category_names = list(Y)[1:]
     return X, Y, category_names
 
 def build_model():
+    """Assemble the model.
+        :returns: a pipeline of estimators
+        :rtype: Pipeline
+    """
     return Pipeline([
         ('features', FeatureUnion([
             ('text_pipeline', Pipeline([
@@ -40,6 +53,7 @@ def build_model():
                 ('tfidf', TfidfTransformer())
             ])),
 
+            # custom tranformers, see my_transformers.py
             ('tok_cnt', TokenCountExtractor()),
             ('upper_pct', UpperCaseExtractor()),
             ('ent_cnt', EntityCountExtractor()),
@@ -51,6 +65,15 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """Evaluates the model accuracy using the supplied test set
+       and prints the results.
+        :param model: the trained model to evaluate
+        :type model: Pipeline
+        :param X_test: test messages
+        :type X_test: DataFrame
+        :param Y_test: test categories
+        :type Y_test: DataFrame
+    """
     Y_pred = model.predict(X_test)
     indices = range(Y_test.shape[1])
     for col, col_name in zip(indices, category_names):
@@ -63,6 +86,12 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """Saves the model to a pickle file.
+        :param model: the trained model to save
+        :type model: Pipeline
+        :param model_filepath: the path to the pickle file
+        :type model_filepath: str
+    """
     pipeline_pkl = open(model_filepath, 'wb')
     pickle.dump(model, pipeline_pkl)
     pipeline_pkl.close()

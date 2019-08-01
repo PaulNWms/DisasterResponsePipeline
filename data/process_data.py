@@ -4,10 +4,20 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    messages = pd.read_csv(messages_filepath)
-    categories = pd.read_csv(categories_filepath)
-    df = pd.merge(messages, categories, how='inner', on='id')
-    categories = df.categories.str.split(';', expand=True)
+    """Loads in message data.
+        :param messages_filepath: the message filename
+        :type messages_filepath: str
+        :param categories_filepath: the categories filename
+        :type categories_filepath: str
+        :returns: a joined table containing messages and categories
+        :rtype: DataFrame
+    """
+    messages_tbl = pd.read_csv(messages_filepath)
+    categories_tbl = pd.read_csv(categories_filepath)
+    # Merge datasets
+    df = pd.merge(messages_tbl, categories_tbl, how='inner', on='id')
+    # Split `categories` into separate category columns
+    categories = df.categories_tbl.str.split(';', expand=True)
     row = categories.iloc[0]
     category_colnames = (row.str.split('-').str)[0].tolist()
     categories.columns = category_colnames
@@ -19,6 +29,7 @@ def load_data(messages_filepath, categories_filepath):
         # convert column from string to numeric
         categories[column] = categories[column].astype('int')
 
+    # Replace `categories` column in `df` with new category columns
     df.drop('categories', axis=1, inplace=True)
     df = pd.concat([df, categories], axis=1, join='inner')
     return df
@@ -26,12 +37,24 @@ def load_data(messages_filepath, categories_filepath):
     
     
 def clean_data(df):
+    """Cleans the data.
+        :param df: the data
+        :type df: DataFrame
+        :returns: cleaned data
+        :rtype: DataFrame
+    """
     df.drop_duplicates(keep='first', inplace=True)
     return df
 
 
 
 def save_data(df, database_filename):
+    """Save the data.
+        :param df: the data
+        :type df: DataFrame
+        :param database_filename: the path to the database file
+        :type database_filename: str
+    """
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('messages', engine, index=False, if_exists='replace')
 
