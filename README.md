@@ -1,5 +1,22 @@
 # Disaster Response Pipeline Project
 
+### Summary:
+This projects extracts labelled message data sent to social media during disasters.  The data is cleaned and stored in a database table, which is then used to train a classifier.  The classifier is then used as a back end to a web site, which takes messages as user input and classifies the message.
+
+### Files:
+- data/
+  - disaster_messages.csv - contains the messages
+  - disaster_categories.csv - contains the labels
+  - process_data.py - cleans and stores the data
+  - DisasterResponse.db - a prepared database
+- models/
+  - my_transformers.py - contains custom data transformers
+  - train_classifier.py - trains the classifier
+- app/
+  - run.py - launches the web page
+  - templates/ - web content
+
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
