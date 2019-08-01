@@ -1,5 +1,6 @@
 import nltk
 import re
+import pandas as pd
 from nltk import pos_tag, ne_chunk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
